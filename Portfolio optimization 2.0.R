@@ -3,7 +3,7 @@ library(timeDate)
 library(quantmod)
 library(PortfolioAnalytics)
 
-#The function computes the log returns of a portfolio, where d is a dataframe
+#The function computes the log returns of a portfolio, where d is a dataframe or other object
 log_return <-function(d) {
   for (i in 2:ncol(d)){
     d[,i] <-c(diff(log(d[,i])))
@@ -28,14 +28,17 @@ portfolio_returns <- na.omit(ROC(closing_prices2016_sample))
 
 #Setting the portfolio objectives and constrains
 prf <-portfolio.spec(colnames(portfolio_returns))
-
+#Constraints
 prf <- add.constraint(prf,type="full_investment")#sum of weights must be 1
+#prf<- add.constraint(prf,type="box",min_sum=0.99,max_sum=1.01) #more flexible constraine for random, GenSA and others methods
 prf <- add.constraint(prf, type="long_only")# no short positions
 prf <- add.constraint(prf, type = "box", min = 0, max=0.5)
+
+#Objectives
 prf <- add.objective(prf,type="return",name="mean")
 prf <- add.objective(prf,type ="risk",name="StdDev")
 
-#optimization
+#P-optimization
 optimal_weights <- optimize.portfolio(portfolio_returns, prf,optimize_method = "ROI",trace=TRUE)
 print(optimal_weights)
 #Optimization with DEoptim was leaven due to the low processing power of the laptop

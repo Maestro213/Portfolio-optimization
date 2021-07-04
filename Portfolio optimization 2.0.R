@@ -16,9 +16,11 @@ log_return <-function(d) {
 closing_prices <- as.timeSeries(read.csv("/Users/fox2/Downloads/prices.txt"))
 class(closing_prices)
 #Subseting the data to the period 2015-2016
-closing_prices2016 <- window(closing_prices, start = "2015-01-01",end="2016-12-31")
-#Choose different assets for portfolio
-closing_prices2016_sample <- cbind(closing_prices2016[,sampleColnames(closing_prices2016,15)])
+closing_prices2016 <- window(closing_prices, start = "2016-01-01",end="2016-12-31")
+#Choose randomly different assets for sample-portfolio
+#Since my laptop cann't process high amount of the data I will run a optimization on a part(half) of the given Assets
+closing_prices2016_sample <- cbind(closing_prices2016[,sampleColnames(closing_prices2016,25)])
+
 sample(closing_prices2016s1,5)
 
 #Calculating the returns
@@ -36,7 +38,7 @@ prf <- add.objective(prf,type ="risk",name="StdDev")
 #optimization
 optimal_weights <- optimize.portfolio(portfolio_returns, prf,optimize_method = "ROI",trace=TRUE)
 print(optimal_weights)
-
+#Optimization with DEoptim was leaven due to the low processing power of the laptop
 #optimal_weights_de <- optimize.portfolio(portfolio_returns,prf ,optimize_method = "DEoptim")
 #print(optimal_weights_de)
 

@@ -2,6 +2,16 @@ library(timeSeries)
 library(timeDate)
 library(quantmod)
 library(PortfolioAnalytics)
+
+#The function computes the log returns of a portfolio, where d is a dataframe
+log_return <-function(d) {
+  for (i in 2:ncol(d)){
+    d[,i] <-c(diff(log(d[,i])))
+  }
+  d <- na.omit(d)
+  return(d)
+}
+
 #importing the data as Time Series object
 closing_prices <- as.timeSeries(read.csv("/Users/fox2/Downloads/prices.txt"))
 class(closing_prices)
